@@ -170,7 +170,14 @@ proc synthesize { module } {
    }
    set end_time [clock seconds]
    log_time synth_design $start_time $end_time 0 "$moduleName $options"
-   
+
+   # keep hierarchy if shared cell is optimized differently across accelerators
+   set c [get_cells *_gen.noc*]
+   if { "$c" != "" } {
+     command "set_property KEEP_HIERARCHY \"YES\" \[get_cells \"$c\"\]"
+   }
+   command "rename_ref -prefix_all ${module}_"
+
    set start_time [clock seconds]
    command "write_checkpoint -force $resultDir/${moduleName}_synth.dcp" "$resultDir/write_checkpoint.log"
    set end_time [clock seconds]

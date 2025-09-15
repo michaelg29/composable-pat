@@ -83,11 +83,12 @@ array set impl_attributes   [list "top"                        [list string   nu
                                   "hd.impl"                    [list boolean {0 1}]  \
                                   "dfx.impl"                   [list boolean {0 1}]  \
                                   "ic.impl"                    [list boolean {0 1}]  \
+                                  "dfx.force_bb"               [list boolean {0 1}]
                                   "hd.budget"                  [list boolean {0 1}]  \
                                   "hd.budget_exclude"          [list string   null]  \
                                   "partitions"                 [list string   null   \
                                                                   string   null   \
-                                                                  enum    {implement import greybox}  \
+                                                                  enum    {implement import greybox flatten}  \
                                                                   string   null   \
                                                                   enum    {default ooc iso}           \
                                                                   enum    {logical placement routing} \
@@ -152,6 +153,7 @@ proc add_implementation { name } {
    set_attribute impl $name "impl"                        0
    set_attribute impl $name "hd.impl"                     0
    set_attribute impl $name "dfx.impl"                    0
+   set_attribute impl $name "dfx.force_bb"                0
    set_attribute impl $name "ic.impl"                     0
    set_attribute impl $name "hd.budget"                   1
    set_attribute impl $name "hd.budget_exclude"           ""

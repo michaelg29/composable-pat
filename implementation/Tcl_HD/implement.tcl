@@ -206,17 +206,21 @@ proc implement {impl} {
                set partitionFile $dcp
             } else {
                #if partition has state=implement, load synth netlist
-               if {[string match $state "implement"]} {
+               if {[string match $state "implement"] || [string match $state "flatten"]} {
                   set partitionFile [get_module_file $module]
                } elseif {[string match $state "import"]} {
                   #TODO: Name used to be based on Pblock to uniquify. Now no open design with new link_design flow,
                   #      so no way to query Pblock name. This code will not work if RPs have same name at the end of hierarchy.
                   #      Project flow names these cell DCPs based of full hierachy name, which can have issues of its own
                   #      if the hierarchy name is very long.  Need to revisit to develop a solution.
-                  set partitionFile "$dcpDir/${name}_${module}_route_design.dcp"
+                  set module_module_name [get_attribute module $module moduleName]
+                  set partitionFile "$dcpDir/${module_module_name}_static.dcp"
+                  if { ![file exists $partitionFile] } {
+                     set partitionFile "$dcpDir/${name}_${module}_route_design.dcp"
+                  }
                } else {
                   set errMsg "\nERROR: Invalid state \"$state\" in settings for $name\($impl)."
-                  append errMsg"Valid states are \"implement\", \"import\", or \"greybox\".\n" 
+                  append errMsg"Valid states are \"implement\", \"import\", \"greybox\", or \"flatten\".\n"
                   error $errMsg
                }
 
@@ -261,30 +265,34 @@ proc implement {impl} {
             }
 
                #Read in scoped module impl XDC even if module is imported since routed cell DCPs won't have timing constraints
-               set implXDC [get_attribute module $module implXDC]
+               #set implXDC [get_attribute module $module implXDC]
                if {[llength $implXDC] > 0} {
                   puts "\tAdding scoped XDC files for $cell"
-                  add_xdc $implXDC 0 $cell
+                  #add_xdc $implXDC 0 $cell
+		  		  add_xdc $implXDC
+				  #readXDC $implXDC
                } else {
                   puts "\tInfo: No scoped XDC files specified for $cell"
                }
          }; #End: Process each partition that is not Top and not greybox
       }; #End: Foreach partition
-   
+
       ###########################################################
-      # Link the top-level design with no black boxes (unless greybox) 
+      # Link the top-level design with no black boxes (unless greybox)
       ###########################################################
       set start_time [clock seconds]
       puts "\t#HD: Running link_design for $top \[[clock format $start_time -format {%a %b %d %H:%M:%S %Y}]\]"
       set partitionCells ""
       foreach partition $partitions {
          lassign $partition module cell state name type level dcp
-         if {![string match $cell $top]} {
+         # do not set top or any cells to be flattened as a black-box partition
+         if {![string match $cell $top] && ![string match $state "flatten"]} {
             lappend partitionCells $cell
          }
       }
+      puts "partitionCells is $partitionCells"
       if {$dfx} {
-         set linkCommand "link_design -mode default -reconfig_partitions \{$partitionCells\} -part $part -top $top"
+         set linkCommand "link_design -mode out_of_context -reconfig_partitions \{$partitionCells\} -part $part -top $top"
          command $linkCommand "$resultDir/${top}_link_design.log"
       } elseif {$hd} {
          set linkCommand "link_design -mode default -partitions \{$partitionCells\} -part $part -top $top"
@@ -552,6 +560,9 @@ proc implement {impl} {
             }
 
             #Carve out all implemented partitions if Top/Static was implemented
+            if {[string match $state "flatten"]} {
+               continue
+            }
             if {[string match $topState "implement"]} {
                set start_time [clock seconds]
                puts "\tCarving out $cell to be a black box \[[clock format $start_time -format {%a %b %d %H:%M:%S %Y}]\]"

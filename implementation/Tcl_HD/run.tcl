@@ -43,6 +43,12 @@ if {[llength  $configurations] > 0} {   #### Set Tcl Params
    generate_dfx_bitstreams $configurations
 }
 
-close $RFH
-close $CFH
-close $WFH
+if {[info exists RFH]} {
+   close $RFH
+}
+if {[info exists CFH]} {
+   close $CFH
+}
+if {[info exists WFH]} {
+   close $WFH
+}

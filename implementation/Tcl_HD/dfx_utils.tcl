@@ -63,7 +63,10 @@ proc get_pp_range { cell } {
 #######################################################
 proc export_partpins { args } {
    set FH "stdout"
-   set pins [get_pins -hier * -filter HD.ASSIGNED_PPLOCS!=""]
+   set do_transform 0
+   set x_offset 0
+   set y_offset 0
+   set pin_string_mapping [list]
 
    #Override defaults with command options
    set argLength [llength $args]
@@ -72,8 +75,12 @@ proc export_partpins { args } {
       set arg [lindex $args $index]
       set value [lindex $args [expr $index+1]]
       switch -exact -- $arg {
-         {-cells}  {set cells [get_cells $value]}
+         {-cells}    {set cells [get_cells $value]}
          {-file}     {set FH [open $value w]}
+         {-trans}    {set do_transform $value}
+         {-xoff}     {set x_offset $value}
+         {-yoff}     {set y_offset $value}
+         {-pin_smap} {set pin_string_mapping $value}
          {-help}     {set     helpMsg "Description:"
                       lappend helpMsg "Exports Partition Pins from in memory design to STDOUT or specified file.\n"
                       lappend helpMsg "Syntax:"
@@ -94,22 +101,52 @@ proc export_partpins { args } {
          default     {set errMsg "ERROR: Specified argument $arg is not supported.\n"
                       append errMsg "Supported arguments are -help, -pblocks, and -file.\n"
                       append errMsg "Use the -help option for more details"
-                      error $errMsg 
+                      error $errMsg
                      }
       }
       set index [expr $index + 2]
    }
-   
+
    if {![info exists cells]} {
       set errMsg "Error: No -cells option specificed. A cell must be specified with this option."
       error $errMsg
    }
 
+   puts "do_transform is $do_transform"
+   puts "xoff is $x_offset, yoff is $y_offset"
+   puts "transform list is $pin_string_mapping"
+
    #if -cell is used, clear out pin list and create a list based of of specified cells
    if {[llength $cells]} {
       foreach cell $cells {
          foreach pin [lsort -dict [get_pins -of [get_cells $cell] -filter HD.ASSIGNED_PPLOCS!=""]] {
-            puts $FH "set_property HD.PARTPIN_LOCS [lindex [get_property HD.ASSIGNED_PPLOCS $pin] 0] \[get_pins \{$pin\}\]"
+            set pplocs [get_property HD.ASSIGNED_PPLOCS $pin]
+
+            set new_pplocs [list]
+            set new_design_pin $pin
+            if {$do_transform != 0} {
+               # transform pploc
+               foreach pploc $pplocs {
+                  lassign [split "$pploc" /] this_tile this_node
+                  set this_tile [get_tile $this_tile]
+                  set tokens [split "$this_tile" {X Y}]
+
+                  set new_x [expr $x_offset + [lindex $tokens end-1]]
+                  set new_y [expr $y_offset + [lindex $tokens end]]
+
+                  lappend new_pplocs "[get_property TILE_TYPE $this_tile]_X${new_x}Y${new_y}/${this_node}"
+               }
+
+               # transform design pin name
+               if {[llength $pin_string_mapping] > 0} {
+                  set new_design_pin [string map $pin_string_mapping $pin]
+               }
+            } else {
+              set new_pplocs $pplocs
+            }
+
+            # write constraint
+            puts $FH "set_property HD.PARTPIN_LOCS \[list $new_pplocs] \[get_pins \{$new_design_pin\}]"
             flush $FH
          }
       }

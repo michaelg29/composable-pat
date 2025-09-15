@@ -1,7 +1,9 @@
 
+[ -z "${CP_DIR}" ] && echo "Could not find environment variable CP_DIR. Please source the env.sh script" && exit 1
+
 bit=${1}
 [ ! -f $bit ] && bit="${bit}.bit"
-[ ! -f $bit ] && echo "Could not find bitstream ${bit}" && exit
+[ ! -f $bit ] && echo "Could not find bitstream ${bit}" && exit 1
 
 device=${2}
 [ -z "$device" ] && device="xc7z020"

@@ -57,8 +57,8 @@ proc impl_step {phase instance {options none} {directive none} {pre none} {setti
             puts "\t#HD: Running pre-$phase script $script"
             command "source $script" "$resultDir/pre_${phase}_script.log"
          } else {
-            set errMsg "\nERROR: Script $script specified for pre-${phase} does not exist"
-            error $errMsg
+            set warnMsg "\nWARNING: Script $script specified for pre-${phase} does not exist"
+            puts $warnMsg
          }
       }
    }
