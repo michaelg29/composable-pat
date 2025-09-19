@@ -33,4 +33,4 @@ set coreDir    $srcDir/cores
 set netlistDir $srcDir/netlist
 
 ##### Project source #####
-set vivadoDir $projDir/vivado
+set vivadoDir $designDir/vivado

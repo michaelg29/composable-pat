@@ -83,7 +83,7 @@ array set impl_attributes   [list "top"                        [list string   nu
                                   "hd.impl"                    [list boolean {0 1}]  \
                                   "dfx.impl"                   [list boolean {0 1}]  \
                                   "ic.impl"                    [list boolean {0 1}]  \
-                                  "dfx.force_bb"               [list boolean {0 1}]
+                                  "dfx.force_bb"               [list boolean {0 1}]  \
                                   "hd.budget"                  [list boolean {0 1}]  \
                                   "hd.budget_exclude"          [list string   null]  \
                                   "partitions"                 [list string   null   \
