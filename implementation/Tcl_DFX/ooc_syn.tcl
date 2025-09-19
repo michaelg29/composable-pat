@@ -1,5 +1,5 @@
 
-source dfx_source.tcl
+source ${tclDir_dfx}/dfx_source.tcl
 
 ####### FPGA type #######
 check_part $part
@@ -13,11 +13,14 @@ set run.prVerify  	   1
 set run.writeBitstream 0
 
 # synthesize modules
+puts "modules are [get_modules]"
 foreach m [get_modules] {
+  puts "examining m $m"
   if { [get_attribute module $m top_level] } {
-    set_attribute module $m synth $run.topSynth
+    set_attribute module $m synth ${run.topSynth}
   } else {
-    set_attribtue module $m synth $run.rmSynth
+    puts "setting synth to ${run.rmSynth} for $m"
+    set_attribute module $m synth ${run.rmSynth}
   }
 }
 

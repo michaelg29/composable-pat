@@ -538,54 +538,6 @@
       </spirit:parameters>
     </spirit:busInterface>
     <spirit:busInterface>
-      <spirit:name>M_AXI_MEM_RST</spirit:name>
-      <spirit:busType spirit:vendor="xilinx.com" spirit:library="signal" spirit:name="reset" spirit:version="1.0"/>
-      <spirit:abstractionType spirit:vendor="xilinx.com" spirit:library="signal" spirit:name="reset_rtl" spirit:version="1.0"/>
-      <spirit:slave/>
-      <spirit:portMaps>
-        <spirit:portMap>
-          <spirit:logicalPort>
-            <spirit:name>RST</spirit:name>
-          </spirit:logicalPort>
-          <spirit:physicalPort>
-            <spirit:name>m_axi_mem_aresetn</spirit:name>
-          </spirit:physicalPort>
-        </spirit:portMap>
-      </spirit:portMaps>
-      <spirit:parameters>
-        <spirit:parameter>
-          <spirit:name>POLARITY</spirit:name>
-          <spirit:value spirit:id="BUSIFPARAM_VALUE.M_AXI_MEM_RST.POLARITY" spirit:choiceRef="choice_list_9d8b0d81">ACTIVE_LOW</spirit:value>
-        </spirit:parameter>
-      </spirit:parameters>
-    </spirit:busInterface>
-    <spirit:busInterface>
-      <spirit:name>M_AXI_MEM_CLK</spirit:name>
-      <spirit:busType spirit:vendor="xilinx.com" spirit:library="signal" spirit:name="clock" spirit:version="1.0"/>
-      <spirit:abstractionType spirit:vendor="xilinx.com" spirit:library="signal" spirit:name="clock_rtl" spirit:version="1.0"/>
-      <spirit:slave/>
-      <spirit:portMaps>
-        <spirit:portMap>
-          <spirit:logicalPort>
-            <spirit:name>CLK</spirit:name>
-          </spirit:logicalPort>
-          <spirit:physicalPort>
-            <spirit:name>m_axi_mem_aclk</spirit:name>
-          </spirit:physicalPort>
-        </spirit:portMap>
-      </spirit:portMaps>
-      <spirit:parameters>
-        <spirit:parameter>
-          <spirit:name>ASSOCIATED_BUSIF</spirit:name>
-          <spirit:value spirit:id="BUSIFPARAM_VALUE.M_AXI_MEM_CLK.ASSOCIATED_BUSIF">M_AXI_MEM</spirit:value>
-        </spirit:parameter>
-        <spirit:parameter>
-          <spirit:name>ASSOCIATED_RESET</spirit:name>
-          <spirit:value spirit:id="BUSIFPARAM_VALUE.M_AXI_MEM_CLK.ASSOCIATED_RESET">m_axi_mem_aresetn</spirit:value>
-        </spirit:parameter>
-      </spirit:parameters>
-    </spirit:busInterface>
-    <spirit:busInterface>
       <spirit:name>s_axi_reg_RST</spirit:name>
       <spirit:busType spirit:vendor="xilinx.com" spirit:library="signal" spirit:name="reset" spirit:version="1.0"/>
       <spirit:abstractionType spirit:vendor="xilinx.com" spirit:library="signal" spirit:name="reset_rtl" spirit:version="1.0"/>
@@ -625,7 +577,7 @@
       <spirit:parameters>
         <spirit:parameter>
           <spirit:name>ASSOCIATED_BUSIF</spirit:name>
-          <spirit:value spirit:id="BUSIFPARAM_VALUE.S_AXI_REG_CLK.ASSOCIATED_BUSIF">s_axi_reg</spirit:value>
+          <spirit:value spirit:id="BUSIFPARAM_VALUE.S_AXI_REG_CLK.ASSOCIATED_BUSIF">s_axi_reg:M_AXI_MEM</spirit:value>
         </spirit:parameter>
         <spirit:parameter>
           <spirit:name>ASSOCIATED_RESET</spirit:name>
@@ -707,9 +659,6 @@
         <spirit:name>xilinx_softwaredriver</spirit:name>
         <spirit:displayName>Software Driver</spirit:displayName>
         <spirit:envIdentifier>:vivado.xilinx.com:sw.driver</spirit:envIdentifier>
-        <spirit:fileSetRef>
-          <spirit:localName>xilinx_softwaredriver_view_fileset</spirit:localName>
-        </spirit:fileSetRef>
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
@@ -1067,7 +1016,17 @@
               <spirit:viewNameRef>xilinx_verilogbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
+          <spirit:driver>
+            <spirit:defaultValue spirit:format="long">0</spirit:defaultValue>
+          </spirit:driver>
         </spirit:wire>
+        <spirit:vendorExtensions>
+          <xilinx:portInfo>
+            <xilinx:enablement>
+              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.m_axi_mem_aclk" xilinx:dependency="false">false</xilinx:isEnabled>
+            </xilinx:enablement>
+          </xilinx:portInfo>
+        </spirit:vendorExtensions>
       </spirit:port>
       <spirit:port>
         <spirit:name>m_axi_mem_aresetn</spirit:name>
@@ -1080,7 +1039,17 @@
               <spirit:viewNameRef>xilinx_verilogbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
           </spirit:wireTypeDefs>
+          <spirit:driver>
+            <spirit:defaultValue spirit:format="long">0</spirit:defaultValue>
+          </spirit:driver>
         </spirit:wire>
+        <spirit:vendorExtensions>
+          <xilinx:portInfo>
+            <xilinx:enablement>
+              <xilinx:isEnabled xilinx:resolve="dependent" xilinx:id="PORT_ENABLEMENT.m_axi_mem_aresetn" xilinx:dependency="false">false</xilinx:isEnabled>
+            </xilinx:enablement>
+          </xilinx:portInfo>
+        </spirit:vendorExtensions>
       </spirit:port>
       <spirit:port>
         <spirit:name>m_axi_mem_awid</spirit:name>
@@ -1940,12 +1909,11 @@
       <spirit:file>
         <spirit:name>hdl/dfx_icap_wrapper_v1_0.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
-        <spirit:userFileType>CHECKSUM_abfebb21</spirit:userFileType>
+        <spirit:userFileType>CHECKSUM_9558e4ec</spirit:userFileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>../../noesp_pynq/vivado/noesp_pynq.tmp/dfx_icap_wrapper_v1_0_project/dfx_icap_wrapper_v1_0_project.srcs/sources_1/ip/dfx_controller_zynq/dfx_controller_zynq.xci</spirit:name>
+        <spirit:name>../../../../bitfusion/soc/vivado.tmp/bitfusion.tmp/dfx_icap_wrapper_v1_0_project/dfx_icap_wrapper_v1_0_project.srcs/sources_1/ip/dfx_controller_zynq/dfx_controller_zynq.xci</spirit:name>
         <spirit:userFileType>xci</spirit:userFileType>
-        <spirit:userFileType>CELL_NAME_dfx_ctrlr</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
     <spirit:fileSet>
@@ -1965,9 +1933,8 @@
         <spirit:fileType>verilogSource</spirit:fileType>
       </spirit:file>
       <spirit:file>
-        <spirit:name>../../noesp_pynq/vivado/noesp_pynq.tmp/dfx_icap_wrapper_v1_0_project/dfx_icap_wrapper_v1_0_project.srcs/sources_1/ip/dfx_controller_zynq/dfx_controller_zynq.xci</spirit:name>
+        <spirit:name>../../../../bitfusion/soc/vivado.tmp/bitfusion.tmp/dfx_icap_wrapper_v1_0_project/dfx_icap_wrapper_v1_0_project.srcs/sources_1/ip/dfx_controller_zynq/dfx_controller_zynq.xci</spirit:name>
         <spirit:userFileType>xci</spirit:userFileType>
-        <spirit:userFileType>CELL_NAME_dfx_ctrlr</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
     <spirit:fileSet>
@@ -1979,38 +1946,6 @@
           </xilinx:componentRef>
         </xilinx:subCoreRef>
       </spirit:vendorExtensions>
-    </spirit:fileSet>
-    <spirit:fileSet>
-      <spirit:name>xilinx_softwaredriver_view_fileset</spirit:name>
-      <spirit:file>
-        <spirit:name>drivers/dfx_icap_wrapper_v1_0/data/dfx_icap_wrapper.mdd</spirit:name>
-        <spirit:userFileType>mdd</spirit:userFileType>
-        <spirit:userFileType>driver_mdd</spirit:userFileType>
-      </spirit:file>
-      <spirit:file>
-        <spirit:name>drivers/dfx_icap_wrapper_v1_0/data/dfx_icap_wrapper.tcl</spirit:name>
-        <spirit:fileType>tclSource</spirit:fileType>
-        <spirit:userFileType>driver_tcl</spirit:userFileType>
-      </spirit:file>
-      <spirit:file>
-        <spirit:name>drivers/dfx_icap_wrapper_v1_0/src/Makefile</spirit:name>
-        <spirit:userFileType>driver_src</spirit:userFileType>
-      </spirit:file>
-      <spirit:file>
-        <spirit:name>drivers/dfx_icap_wrapper_v1_0/src/dfx_icap_wrapper.h</spirit:name>
-        <spirit:fileType>cSource</spirit:fileType>
-        <spirit:userFileType>driver_src</spirit:userFileType>
-      </spirit:file>
-      <spirit:file>
-        <spirit:name>drivers/dfx_icap_wrapper_v1_0/src/dfx_icap_wrapper.c</spirit:name>
-        <spirit:fileType>cSource</spirit:fileType>
-        <spirit:userFileType>driver_src</spirit:userFileType>
-      </spirit:file>
-      <spirit:file>
-        <spirit:name>drivers/dfx_icap_wrapper_v1_0/src/dfx_icap_wrapper_selftest.c</spirit:name>
-        <spirit:fileType>cSource</spirit:fileType>
-        <spirit:userFileType>driver_src</spirit:userFileType>
-      </spirit:file>
     </spirit:fileSet>
     <spirit:fileSet>
       <spirit:name>xilinx_xpgui_view_fileset</spirit:name>
@@ -2172,16 +2107,16 @@
       <xilinx:xpmLibraries>
         <xilinx:xpmLibrary>XPM_FIFO</xilinx:xpmLibrary>
       </xilinx:xpmLibraries>
-      <xilinx:coreRevision>10</xilinx:coreRevision>
-      <xilinx:coreCreationDateTime>2025-09-04T18:54:57Z</xilinx:coreCreationDateTime>
+      <xilinx:coreRevision>14</xilinx:coreRevision>
+      <xilinx:coreCreationDateTime>2025-09-18T19:42:46Z</xilinx:coreCreationDateTime>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
       <xilinx:xilinxVersion>2023.2</xilinx:xilinxVersion>
-      <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="84035e1e"/>
+      <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="9518c165"/>
       <xilinx:checksum xilinx:scope="addressSpaces" xilinx:value="9b043862"/>
       <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="06461c6f"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="b13f0e78"/>
-      <xilinx:checksum xilinx:scope="ports" xilinx:value="468df6e5"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="6a31c02c"/>
+      <xilinx:checksum xilinx:scope="ports" xilinx:value="66b82b0a"/>
       <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="2fa86b0e"/>
       <xilinx:checksum xilinx:scope="parameters" xilinx:value="de403c59"/>
     </xilinx:packagingInfo>

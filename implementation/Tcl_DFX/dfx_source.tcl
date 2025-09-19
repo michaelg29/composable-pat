@@ -11,7 +11,7 @@ set cpDir $::env(CP_DIR)
 set tclParams [list hd.visual 1]
 set tclHome "${cpDir}/implementation/Tcl_HD"
 set tclDir $tclHome
-source $tclDir/design_utils.tcl
+#source $tclDir/design_utils.tcl
 source $tclDir/log_utils.tcl
 source $tclDir/synth_utils.tcl
 source $tclDir/impl_utils.tcl
@@ -33,4 +33,4 @@ set coreDir    $srcDir/cores
 set netlistDir $srcDir/netlist
 
 ##### Project source #####
-set vivadoDir $projDir/vivado
+set vivadoDir $designDir/vivado
